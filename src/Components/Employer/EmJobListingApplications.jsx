@@ -103,10 +103,6 @@ export default function EmJobListingApplications() {
   //do this for talent's skillset, benefits, work experiences and talent education
 
   useEffect(() => {
-    console.log("i am jobapplications", jobapplications);
-  }, [jobapplications]);
-
-  useEffect(() => {
     const talentids = jobapplications.map(
       (jobapplication) => jobapplication.talentId
     );
@@ -125,11 +121,6 @@ export default function EmJobListingApplications() {
       return axios
         .get(`${BACKEND_TALENT_URL}/${talentid}/resume`)
         .then((response) => {
-          console.log(
-            "i am the response.data from the getAllTalent function",
-            response.data
-          );
-
           return response.data;
         })
         .catch((error) => {
@@ -140,12 +131,9 @@ export default function EmJobListingApplications() {
     Promise.all(talentResumePromises).then((values) =>
       setAllApplicantResumes(values)
     );
-
-    console.log("talentresumes", talentResumePromises);
   };
 
   const getAllTalentSkillSets = (talentids) => {
-    console.log("getAllTalentSkillSets is being called");
     //map takes in a talentid and returns a promise.
     const talentSkillSetPromises = talentids.map((talentid) => {
       return axios
@@ -164,7 +152,6 @@ export default function EmJobListingApplications() {
   };
 
   const getAllTalentWorkExp = (talentids) => {
-    console.log("getAllTalentWorkExp is being called");
     //map takes in a talentid and returns a promise.
     const talentWorkExpPromises = talentids.map((talentid) => {
       return axios
@@ -183,7 +170,6 @@ export default function EmJobListingApplications() {
   };
 
   const getAllTalentEducations = (talentids) => {
-    console.log("getAllTalentResumes is being called");
     //map takes in a talentid and returns a promise.
     const talentEducationsPromises = talentids.map((talentid) => {
       return axios
@@ -208,11 +194,6 @@ export default function EmJobListingApplications() {
       return axios
         .get(`${BACKEND_TALENT_URL}/${talentid}/benefits`)
         .then((response) => {
-          console.log(
-            "i am the response.data from the getAllBenefits function",
-            response.data
-          );
-
           return response.data;
         })
         .catch((error) => {
@@ -264,9 +245,7 @@ export default function EmJobListingApplications() {
       <h3 className="box">Applicant no.1</h3>
       {/*Display talent's resume here.*/}
       <h5 className="box">They consider themselves to be a:</h5>
-      {allApplicantResumes &&
-        allApplicantResumes[0] &&
-        allApplicantResumes[0][0]?.title}
+      {allApplicantResumes?.[0]?.title}
       <h5 className="box">Their objective:</h5>
       {allApplicantResumes &&
         allApplicantResumes[0] &&
