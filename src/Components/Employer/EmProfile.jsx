@@ -64,7 +64,11 @@ export default function EmProfile() {
             <Fab
               color="primary"
               aria-label="add"
-              onClick={() => navigate(`/employer/input-details`)}
+              onClick={() =>
+                navigate(`/employer/input-details`, {
+                  state: { editing: true },
+                })
+              }
               sx={{
                 position: "fixed",
                 bottom: "80px", // Adjust as needed
