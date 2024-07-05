@@ -108,10 +108,10 @@ export default function EmProfileCreation() {
         <h1>Profile Creation</h1>
         {/*Firebase storage stuff for the Employer Profile Picture here.*/}
         {submitted_image ? (
-          <img className="fixedSizeImage" src={imgurl} />
+          <img className="employer-avatar-img" src={imgurl} />
         ) : (
           <img
-            className="fixedSizeImage"
+            className="employer-avatar-img"
             src="../../public/defaultprofileimg.jpg"
           />
         )}

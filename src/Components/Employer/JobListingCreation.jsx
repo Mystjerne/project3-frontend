@@ -10,6 +10,10 @@ import { useUser } from "../Context/UserContext";
 import BasicModal from "./BasicModal";
 import EditIcon from "@mui/icons-material/Edit";
 
+//when i tried to download @mui/x-datewhateveyr it ruined the package.json and node_modules of this project, bricking the main page.
+// import { createTheme } from "@mui/material/styles";
+// import { MobileDatePicker } from/MobileDatePicker";
+
 import { Link } from "react-router-dom";
 
 const BACKEND_URL = import.meta.env.VITE_SOME_BACKEND_URL;

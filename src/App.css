@@ -342,3 +342,9 @@ Black = rgb(15, 15, 15) */
   width: 200px;
   height: 200px;
 }
+
+.employer-avatar-img {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+}

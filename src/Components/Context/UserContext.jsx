@@ -27,7 +27,7 @@ export const UserProvider = ({ children }) => {
   );
 
   //fileInputFile is a state containing the employer's profile image
-  const [imgurl, setImageUrl] = useState("");
+  const [imgurl, setImageUrl] = useState("/defaultprofileimg.jpg");
 
   const [userID, setUserID] = useState(localStorage.getItem("userID") || "");
 
