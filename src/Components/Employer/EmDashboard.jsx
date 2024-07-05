@@ -30,7 +30,7 @@ export default function EmDashboard() {
   }, []);
 
   useEffect(() => {
-    console.log(joblistings);
+    console.log("i am joblistings:", joblistings);
   }, [joblistings]);
 
   let alljoblistings = joblistings.map((joblisting) => (
@@ -49,7 +49,7 @@ export default function EmDashboard() {
   return (
     <>
       <div className="container">
-        <h1 className="centered">Employer Dashboard {userFirstName}</h1>
+        <h1 className="centered">{userFirstName}'s Employer Dashboard </h1>
 
         <h3 className="box">Active Job Listings</h3>
         {/*if the active job listings is empty, show the text:*/}

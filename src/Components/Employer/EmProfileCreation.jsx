@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-import { Link } from "react-router-dom";
+import { Link, Outlet, useLocation } from "react-router-dom";
 import { storage } from "../../firebase";
 
 import {
@@ -18,6 +18,7 @@ import BasicModal from "./BasicModal";
 import { useUser } from "../Context/UserContext";
 
 import axios from "axios";
+import NavBar from "../../NavBar";
 
 const BACKEND_EMPLOYER_URL = import.meta.env.VITE_SOME_BACKEND_EMPLOYER_URL;
 const CustomButton = styled(Button)`
@@ -50,8 +51,16 @@ export default function EmProfileCreation() {
     opendescriptionModal: false,
   });
 
+  const location = useLocation();
+  const [editing, setEditing] = useState(false);
   const [fileInputFile, setFileInputFile] = useState({});
   const DB_STORAGE_KEY = "company_image";
+
+  useEffect(() => {
+    if (location.state && location.state.editing) {
+      setEditing(location.state.editing);
+    }
+  }, [location.state]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -77,35 +86,52 @@ export default function EmProfileCreation() {
     setModalState((prevState) => ({ ...prevState, [modalName]: true }));
   };
 
-  const SubmitToBackend = (e) => {
-    //send the Emdata to the backend.
-    e.preventDefault();
-    //on Submit, make a post request to the backend.
-    const sendEmployerData = async () => {
-      try {
-        //make a http POST request to the backend.
-        let response = await axios.post(`${BACKEND_EMPLOYER_URL}`, {
-          description: description,
-          companyName: companyName,
-          firstName: userFirstName,
-          lastName: userLastName,
-          email: userEmail,
-          photo: imgurl,
-        });
-      } catch (err) {
-        console.log(err);
-      }
-    };
+  const handleSubmitEmData = () => {
+    if (editing) {
+      const updateEmployerData = async () => {
+        try {
+          //make a http POST request to the backend.
+          let response = await axios.post(`${BACKEND_EMPLOYER_URL}/${userID}`, {
+            description: description,
+            companyName: companyName,
+            firstName: userFirstName,
+            lastName: userLastName,
+            email: userEmail,
+            photo: imgurl,
+          });
+        } catch (err) {
+          console.log(err);
+        }
+      };
+      updateEmployerData();
 
-    sendEmployerData();
+      alert("Updated employer data!");
+    } else {
+      const createEmployerData = async () => {
+        try {
+          //make a http POST request to the backend.
+          let response = await axios.post(`${BACKEND_EMPLOYER_URL}`, {
+            description: description,
+            companyName: companyName,
+            firstName: userFirstName,
+            lastName: userLastName,
+            email: userEmail,
+            photo: imgurl,
+          });
+        } catch (err) {
+          console.log(err);
+        }
+      };
+      createEmployerData();
 
-    alert("Submitted employer data!");
+      alert("Updated employer data!");
+    }
   };
 
   return (
     <div className="container">
       <div className="company-img-div">
-        <h1>Profile Creation</h1>
+        <h1>{editing ? "Edit Profile" : "Profile Creation"}</h1>
         {/*Firebase storage stuff for the Employer Profile Picture here.*/}
         {submitted_image ? (
           <img className="employer-avatar-img" src={imgurl} />
@@ -133,7 +159,6 @@ export default function EmProfileCreation() {
           <EditIcon />
         </CustomButton>
       </h3>
-
       <BasicModal
         modaltitle="Company Name:"
         modaldescription="What does everyone call your company?"
@@ -154,7 +179,6 @@ export default function EmProfileCreation() {
           <EditIcon />
         </CustomButton>
       </h3>
-
       <BasicModal
         modaltitle="Company Description:"
         modaldescription="Tell prospective job applicants what your company is all about!"
@@ -167,16 +191,16 @@ export default function EmProfileCreation() {
         setPassedInState={setDescription}
         multiline={true}
       ></BasicModal>
-
       <p style={{ wordWrap: "break-word" }} className="contentbox">
         {description}
       </p>
-      <CustomButton className="center" onClick={SubmitToBackend}>
+      <CustomButton className="center" onClick={() => handleSubmitEmData()}>
         Submit
       </CustomButton>
       <CustomButton className="right">
         <Link to={`/employer/${userID}/job`}>Next</Link>
       </CustomButton>
+      {editing && <NavBar />}
     </div>
   );
 }
