@@ -16,11 +16,12 @@ import { useNavigate } from "react-router-dom";
 export default function EmProfile() {
   const {
     description,
-    setDescription,
     imgurl,
-    setImageUrl,
     companyName,
-    setCompanyName,
+    mission_statement,
+    phone,
+    headquarters,
+    UserEmail,
   } = useUser();
 
   const navigate = useNavigate();
@@ -46,17 +47,21 @@ export default function EmProfile() {
 
         <>
           <div className="container">
-            {/* <h3 style={{ wordWrap: "break-word" }} className="contentbox">
-              {companyName}
-            </h3>
-            <h3 className="box">Company Name</h3>
-            {companyName}
-            <p>{titleField}</p> */}
-
             <h3 className="box">Company Description</h3>
             <p style={{ wordWrap: "break-word" }} className="contentbox">
               {description}
             </p>
+
+            <h3 className="box">Mission Statement</h3>
+            <p style={{ wordWrap: "break-word" }} className="contentbox">
+              {mission_statement}
+            </p>
+            <h3 className="box">Contact Information</h3>
+            <p style={{ wordWrap: "break-word" }} className="contentbox">
+              {companyName} is located in {headquarters}. Contact {phone} or
+              email this company representative at {UserEmail}.
+            </p>
+            <h3 className="box">Company Description</h3>
 
             <br />
             <LogoutButton />
