@@ -54,10 +54,10 @@ export default function EmDashboard() {
         <h3 className="box">Active Job Listings</h3>
         {/*if the active job listings is empty, show the text:*/}
 
-        {joblistings ? (
+        {joblistings.length !== 0 ? (
           alljoblistings
         ) : (
-          <p>You have no job listings at the moment!</p>
+          <p>To get started with a job listing, press the add button below!</p>
           /*BUG !! the alljoblistings variable will always exist, so the text after this will never be shown.*/
         )}
 

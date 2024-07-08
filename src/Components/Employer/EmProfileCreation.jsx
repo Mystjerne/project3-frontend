@@ -42,6 +42,12 @@ export default function EmProfileCreation() {
     setDescription,
     imgurl,
     setImageUrl,
+    phone,
+    setPhone,
+    headquarters,
+    setHeadquarters,
+    mission_statement,
+    setMissionStatement,
   } = useUser();
 
   const [submitted_image, setSubmittedImage] = useState(false);
@@ -98,6 +104,9 @@ export default function EmProfileCreation() {
             lastName: userLastName,
             email: userEmail,
             photo: imgurl,
+            phone: phone,
+            mission_statement: mission_statement,
+            headquarters: headquarters,
           });
         } catch (err) {
           console.log(err);
@@ -117,6 +126,9 @@ export default function EmProfileCreation() {
             lastName: userLastName,
             email: userEmail,
             photo: imgurl,
+            phone: phone,
+            headquarters: headquarters,
+            mission_statement: mission_statement,
           });
         } catch (err) {
           console.log(err);
@@ -194,10 +206,78 @@ export default function EmProfileCreation() {
       <p style={{ wordWrap: "break-word" }} className="contentbox">
         {description}
       </p>
-      <CustomButton className="center" onClick={() => handleSubmitEmData()}>
+
+      {/* Code handling Company Phone */}
+      <h3 className="box">
+        Company Phone
+        <CustomButton onClick={() => handleModalOpen("openPhoneModal")}>
+          <EditIcon />
+        </CustomButton>
+      </h3>
+      <BasicModal
+        modaltitle="Company Phone:"
+        modaldescription="What is the phone number for your company?"
+        open={modalState.openPhoneModal}
+        setOpen={(value) =>
+          setModalState({ ...modalState, openPhoneModal: value })
+        }
+        propertyname="phone"
+        passedInState={phone}
+        setPassedInState={setPhone}
+        multiline={false}
+      ></BasicModal>
+      <h3>{phone}</h3>
+
+      {/* Code handling Company Headquarters */}
+      <h3 className="box">
+        Company Headquarters
+        <CustomButton onClick={() => handleModalOpen("openHeadquartersModal")}>
+          <EditIcon />
+        </CustomButton>
+      </h3>
+      <BasicModal
+        modaltitle="Company Headquarters:"
+        modaldescription="Where is the headquarters of your company located?"
+        open={modalState.openHeadquartersModal}
+        setOpen={(value) =>
+          setModalState({ ...modalState, openHeadquartersModal: value })
+        }
+        propertyname="headquarters"
+        passedInState={headquarters}
+        setPassedInState={setHeadquarters}
+        multiline={false}
+      ></BasicModal>
+      <h3>{headquarters}</h3>
+
+      {/* Code handling Company Mission Statement */}
+      <h3 className="box">
+        Company Mission Statement
+        <CustomButton
+          onClick={() => handleModalOpen("openMissionStatementModal")}
+        >
+          <EditIcon />
+        </CustomButton>
+      </h3>
+      <BasicModal
+        modaltitle="Company Mission Statement:"
+        modaldescription="What is the mission statement of your company?"
+        open={modalState.openMissionStatementModal}
+        setOpen={(value) =>
+          setModalState({ ...modalState, openMissionStatementModal: value })
+        }
+        propertyname="mission_statement"
+        passedInState={mission_statement}
+        setPassedInState={setMissionStatement}
+        multiline={true}
+      ></BasicModal>
+      <p style={{ wordWrap: "break-word" }} className="contentbox">
+        {mission_statement}
+      </p>
+
+      {/* <CustomButton className="center" onClick={() => handleSubmitEmData()}>
         Submit
-      </CustomButton>
-      <CustomButton className="right">
+      </CustomButton> */}
+      <CustomButton className="right" onClick={() => handleSubmitEmData()}>
         <Link to={`/employer/${userID}/job`}>Next</Link>
       </CustomButton>
       {editing && <NavBar />}

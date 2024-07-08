@@ -19,15 +19,30 @@ export const UserProvider = ({ children }) => {
   );
 
   const [companyName, setCompanyName] = useState(
-    localStorage.getItem("companyName")
+    localStorage.getItem("companyName") || "Default Company Name"
   );
 
   const [description, setDescription] = useState(
-    localStorage.getItem("description")
+    localStorage.getItem("description") || "Default Company Description"
   );
 
   //fileInputFile is a state containing the employer's profile image
-  const [imgurl, setImageUrl] = useState("/defaultprofileimg.jpg");
+  const [imgurl, setImageUrl] = useState(
+    localStorage.getItem("imgurl") || "/defaultprofileimg.jpg"
+  );
+
+  const [mission_statement, setMissionStatement] = useState(
+    localStorage.getItem("mission_statement") ||
+      "Your company's mission statement."
+  );
+
+  const [headquarters, setHeadquarters] = useState(
+    localStorage.getItem("headquarters") || "Earth"
+  );
+
+  const [phone, setPhone] = useState(
+    localStorage.getItem("phone") || "12345678"
+  );
 
   const [userID, setUserID] = useState(localStorage.getItem("userID") || "");
 
@@ -39,6 +54,11 @@ export const UserProvider = ({ children }) => {
     setUserRole("");
     setUserID("");
 
+    setCompanyName("");
+    setHeadquarters("");
+    setMissionStatement("");
+    setPhone("");
+
     localStorage.removeItem("userFirstName");
     localStorage.removeItem("userLastName");
     localStorage.removeItem("userImage");
@@ -47,6 +67,7 @@ export const UserProvider = ({ children }) => {
     localStorage.removeItem("userID");
     localStorage.removeItem("companyName");
     localStorage.removeItem("description");
+    localStorage.removeItem("phone");
   };
 
   useEffect(() => {
@@ -58,6 +79,9 @@ export const UserProvider = ({ children }) => {
     localStorage.setItem("userID", userID);
     localStorage.setItem("companyName", companyName);
     localStorage.setItem("description", description);
+    localStorage.setItem("mission_statement", mission_statement);
+    localStorage.setItem("headquarters", headquarters);
+    localStorage.setItem("phone", phone);
   }, [
     userFirstName,
     userLastName,
@@ -67,6 +91,9 @@ export const UserProvider = ({ children }) => {
     userID,
     companyName,
     description,
+    mission_statement,
+    headquarters,
+    phone,
   ]);
 
   return (
@@ -90,6 +117,12 @@ export const UserProvider = ({ children }) => {
         setDescription,
         imgurl,
         setImageUrl,
+        mission_statement,
+        setMissionStatement,
+        headquarters,
+        setHeadquarters,
+        phone,
+        setPhone,
         handleUserLogout,
       }}
     >
