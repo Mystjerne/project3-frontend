@@ -26,6 +26,9 @@ export default function LandingPage() {
     setUserID,
     setDescription,
     setCompanyName,
+    setMissionStatement,
+    setPhone,
+    setHeadquarters,
   } = useUser();
 
   const nav = useNavigate();
@@ -51,7 +54,6 @@ export default function LandingPage() {
           const talentResponse = await axios.get(BACKEND_TALENT_URL);
           const talentData = talentResponse.data;
           console.log("talentData", talentResponse);
-          //why the fuck is talentData coming back as an html file
 
           const talentEmails = talentData.map((talent) => talent.email);
           if (talentEmails.includes(user.email)) {
@@ -88,15 +90,10 @@ export default function LandingPage() {
 
             setDescription(userData.description);
             setCompanyName(userData.companyName);
+            setMissionStatement(userData.missionStatement);
 
             setUserRole("employer");
-
-            if (userData.companyName) {
-              nav("/employer");
-            } else {
-              nav("/employer/input-details");
-            }
-
+            nav("/employer");
             return;
           }
 
@@ -108,6 +105,9 @@ export default function LandingPage() {
       }
     };
 
+    //Debouncing:
+    //The checkUserStatus function is wrapped in a setTimeout with a 500ms delay.
+    //This delay helps to ensure that isAuthenticated and user are set before the function executes.
     checkUserStatus();
   }, [
     isAuthenticated,
@@ -121,6 +121,7 @@ export default function LandingPage() {
     setUserID,
     setDescription,
     setCompanyName,
+    setMissionStatement,
   ]);
 
   const LoginButton = () => {

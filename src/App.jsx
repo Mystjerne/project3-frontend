@@ -28,7 +28,9 @@ function App() {
     createRoutesFromElements(
       <Route>
         <Route index element={<LandingPage />} />
+
         <Route path="user-category" element={<UserCategory />} />
+
         <Route
           path="talent"
           element={

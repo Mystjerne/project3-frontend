@@ -85,6 +85,7 @@ export default function UserCategory() {
         setLastName("");
         setEmail("");
         setPhotoURL("");
+
         nav(`/${role}/profile`);
 
         const userResponse = await axios.get(`${BACKEND_URL}/${role}`);
@@ -97,6 +98,7 @@ export default function UserCategory() {
             (person) => person.email === user.email
           );
           console.log("user data id", userData.id);
+          console.log("useremails is actually running");
           setUserID(userData.id);
           return;
         }
