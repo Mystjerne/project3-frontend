@@ -31,8 +31,8 @@ export const UserProvider = ({ children }) => {
     localStorage.getItem("imgurl") || "/defaultprofileimg.jpg"
   );
 
-  const [mission_statement, setMissionStatement] = useState(
-    localStorage.getItem("mission_statement") ||
+  const [missionStatement, setMissionStatement] = useState(
+    localStorage.getItem("missionStatement") ||
       "Your company's mission statement."
   );
 
@@ -79,7 +79,7 @@ export const UserProvider = ({ children }) => {
     localStorage.setItem("userID", userID);
     localStorage.setItem("companyName", companyName);
     localStorage.setItem("description", description);
-    localStorage.setItem("mission_statement", mission_statement);
+    localStorage.setItem("missionStatement", missionStatement);
     localStorage.setItem("headquarters", headquarters);
     localStorage.setItem("phone", phone);
   }, [
@@ -91,7 +91,7 @@ export const UserProvider = ({ children }) => {
     userID,
     companyName,
     description,
-    mission_statement,
+    missionStatement,
     headquarters,
     phone,
   ]);
@@ -117,7 +117,7 @@ export const UserProvider = ({ children }) => {
         setDescription,
         imgurl,
         setImageUrl,
-        mission_statement,
+        missionStatement,
         setMissionStatement,
         headquarters,
         setHeadquarters,
