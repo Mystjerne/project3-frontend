@@ -9,6 +9,12 @@ const CustomButton = styled(Button)`
   ${buttonStyle}
 `;
 
+import { Avatar } from "@mui/material";
+import { profileImage, reversedOutlineButton } from "../../styleComponents";
+const CustomProfileImage = styled(Avatar)`
+  ${profileImage}
+`;
+
 import EditIcon from "@mui/icons-material/Edit";
 import { Fab } from "@mui/material";
 import { useNavigate } from "react-router-dom";
@@ -18,10 +24,10 @@ export default function EmProfile() {
     description,
     imgurl,
     companyName,
-    mission_statement,
+    missionStatement,
     phone,
     headquarters,
-    UserEmail,
+    userEmail,
   } = useUser();
 
   const navigate = useNavigate();
@@ -42,7 +48,17 @@ export default function EmProfile() {
       <div className="container">
         <div className="company-img-div">
           <h1>{companyName}'s Profile</h1>
-          <img className="employer-avatar-img" src={imgurl} />
+          {/* <img className="employer-avatar-img" src={imgurl} /> */}
+          <div
+            className="company-img-div"
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <CustomProfileImage alt="profile" src={imgurl} />
+          </div>
         </div>
 
         <>
@@ -54,16 +70,17 @@ export default function EmProfile() {
 
             <h3 className="box">Mission Statement</h3>
             <p style={{ wordWrap: "break-word" }} className="contentbox">
-              {mission_statement}
+              {missionStatement}
             </p>
             <h3 className="box">Contact Information</h3>
             <p style={{ wordWrap: "break-word" }} className="contentbox">
               {companyName} is located in {headquarters}. Contact {phone} or
-              email this company representative at {UserEmail}.
+              email this company representative at {userEmail}.
             </p>
             <h3 className="box">Company Description</h3>
 
             <br />
+
             <LogoutButton />
 
             <Fab

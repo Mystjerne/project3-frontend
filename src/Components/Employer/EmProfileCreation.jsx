@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 import { Link, Outlet, useLocation } from "react-router-dom";
 import { storage } from "../../firebase";
@@ -11,7 +11,22 @@ import {
 
 import { Button } from "antd";
 import styled from "styled-components";
-import { buttonStyle } from "../../styleComponents";
+import {
+  buttonStyle,
+  profileImage,
+  reversedOutlineButton,
+} from "../../styleComponents";
+import { Avatar } from "@mui/material";
+import { PlusOutlined } from "@ant-design/icons";
+
+const CustomProfileImage = styled(Avatar)`
+  ${profileImage}
+`;
+
+const ReversedCustomButton = styled(Button)`
+  ${reversedOutlineButton}
+`;
+
 import EditIcon from "@mui/icons-material/Edit";
 import BasicModal from "./BasicModal";
 
@@ -25,10 +40,10 @@ const CustomButton = styled(Button)`
   ${buttonStyle}
 `;
 
-//Employers need to be able to input the following general info:
-//name
-//description
-//photo
+// Employers need to be able to input the following general info:
+// name
+// description
+// photo
 
 export default function EmProfileCreation() {
   const {
@@ -46,7 +61,7 @@ export default function EmProfileCreation() {
     setPhone,
     headquarters,
     setHeadquarters,
-    mission_statement,
+    missionStatement,
     setMissionStatement,
   } = useUser();
 
@@ -55,6 +70,9 @@ export default function EmProfileCreation() {
   const [modalState, setModalState] = useState({
     opencompanyNameModal: false,
     opendescriptionModal: false,
+    openHeadquartersModal: false,
+    openMissionStatementModal: false,
+    openPhoneModal: false,
   });
 
   const location = useLocation();
@@ -62,15 +80,18 @@ export default function EmProfileCreation() {
   const [fileInputFile, setFileInputFile] = useState({});
   const DB_STORAGE_KEY = "company_image";
 
+  //reference to the
+  const fileInputRef = useRef(null);
+
+  //If the user navigated to this page from any other page than the Employer profile page, editing is not set to true.
+  //We assume that the user is inputting a new profile for the first time.
   useEffect(() => {
     if (location.state && location.state.editing) {
       setEditing(location.state.editing);
     }
   }, [location.state]);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
+  const handleSubmitImgToFirebase = () => {
     setSubmittedImage(true);
     const storageRefInstance = storageRef(
       storage,
@@ -96,7 +117,7 @@ export default function EmProfileCreation() {
     if (editing) {
       const updateEmployerData = async () => {
         try {
-          //make a http POST request to the backend.
+          // make a HTTP POST request to the backend.
           let response = await axios.post(`${BACKEND_EMPLOYER_URL}/${userID}`, {
             description: description,
             companyName: companyName,
@@ -105,7 +126,7 @@ export default function EmProfileCreation() {
             email: userEmail,
             photo: imgurl,
             phone: phone,
-            mission_statement: mission_statement,
+            missionStatement: missionStatement,
             headquarters: headquarters,
           });
         } catch (err) {
@@ -118,7 +139,7 @@ export default function EmProfileCreation() {
     } else {
       const createEmployerData = async () => {
         try {
-          //make a http POST request to the backend.
+          // make a HTTP POST request to the backend.
           let response = await axios.post(`${BACKEND_EMPLOYER_URL}`, {
             description: description,
             companyName: companyName,
@@ -128,7 +149,7 @@ export default function EmProfileCreation() {
             photo: imgurl,
             phone: phone,
             headquarters: headquarters,
-            mission_statement: mission_statement,
+            missionStatement: missionStatement,
           });
         } catch (err) {
           console.log(err);
@@ -140,30 +161,47 @@ export default function EmProfileCreation() {
     }
   };
 
+  const callClickOnInput = () => {
+    fileInputRef.current.click();
+  };
+
+  //after the file input file is changed, submit it to firebase immediately.
+  useEffect(() => {
+    handleSubmitImgToFirebase();
+  }, [fileInputFile]);
+
   return (
     <div className="container">
-      <div className="company-img-div">
+      {/*Code Handling Company Profile Image changes*/}
+      <div
+        className="company-img-div"
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
         <h1>{editing ? "Edit Profile" : "Profile Creation"}</h1>
-        {/*Firebase storage stuff for the Employer Profile Picture here.*/}
+        {/* Firebase storage stuff for the Employer Profile Picture here. */}
         {submitted_image ? (
-          <img className="employer-avatar-img" src={imgurl} />
+          <CustomProfileImage src={imgurl} />
         ) : (
-          <img
-            className="employer-avatar-img"
-            src="../../public/defaultprofileimg.jpg"
-          />
+          <CustomProfileImage src="../../public/defaultprofileimg.jpg" />
         )}
 
-        <form onSubmit={handleSubmit}>
-          <input
-            type="file"
-            onChange={(e) => setFileInputFile(e.target.files[0])}
-          ></input>
-
-          <br />
-          <CustomButton htmlType="submit">Upload Image</CustomButton>
-        </form>
+        {/*Upload Image Button*/}
+        <ReversedCustomButton onClick={callClickOnInput}>
+          <PlusOutlined /> Upload Image
+        </ReversedCustomButton>
+        <input
+          ref={fileInputRef}
+          style={{ display: "none" }}
+          type="file"
+          onChange={(e) => setFileInputFile(e.target.files[0])}
+        />
+        <br />
       </div>
+
       {/* Code handling Company Name */}
       <h3 className="box">
         Company Name
@@ -182,7 +220,7 @@ export default function EmProfileCreation() {
         passedInState={companyName}
         setPassedInState={setCompanyName}
         multiline={false}
-      ></BasicModal>
+      />
       <h3>{companyName}</h3>
       {/* Code handling Company Description */}
       <h3 className="box">
@@ -202,7 +240,7 @@ export default function EmProfileCreation() {
         passedInState={description}
         setPassedInState={setDescription}
         multiline={true}
-      ></BasicModal>
+      />
       <p style={{ wordWrap: "break-word" }} className="contentbox">
         {description}
       </p>
@@ -225,7 +263,7 @@ export default function EmProfileCreation() {
         passedInState={phone}
         setPassedInState={setPhone}
         multiline={false}
-      ></BasicModal>
+      />
       <h3>{phone}</h3>
 
       {/* Code handling Company Headquarters */}
@@ -246,7 +284,7 @@ export default function EmProfileCreation() {
         passedInState={headquarters}
         setPassedInState={setHeadquarters}
         multiline={false}
-      ></BasicModal>
+      />
       <h3>{headquarters}</h3>
 
       {/* Code handling Company Mission Statement */}
@@ -258,6 +296,7 @@ export default function EmProfileCreation() {
           <EditIcon />
         </CustomButton>
       </h3>
+
       <BasicModal
         modaltitle="Company Mission Statement:"
         modaldescription="What is the mission statement of your company?"
@@ -265,13 +304,13 @@ export default function EmProfileCreation() {
         setOpen={(value) =>
           setModalState({ ...modalState, openMissionStatementModal: value })
         }
-        propertyname="mission_statement"
-        passedInState={mission_statement}
+        propertyname="missionStatement"
+        passedInState={missionStatement}
         setPassedInState={setMissionStatement}
         multiline={true}
-      ></BasicModal>
+      />
       <p style={{ wordWrap: "break-word" }} className="contentbox">
-        {mission_statement}
+        {missionStatement}
       </p>
 
       {/* <CustomButton className="center" onClick={() => handleSubmitEmData()}>
