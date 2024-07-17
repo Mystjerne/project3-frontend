@@ -67,20 +67,20 @@ export default function EmProfile() {
             <p style={{ wordWrap: "break-word" }} className="contentbox">
               {description}
             </p>
+            <hr />
 
             <h3 className="box">Mission Statement</h3>
             <p style={{ wordWrap: "break-word" }} className="contentbox">
               {missionStatement}
             </p>
+            <hr />
             <h3 className="box">Contact Information</h3>
             <p style={{ wordWrap: "break-word" }} className="contentbox">
               {companyName} is located in {headquarters}. Contact {phone} or
               email this company representative at {userEmail}.
             </p>
-            <h3 className="box">Company Description</h3>
-
+            <hr />
             <br />
-
             <LogoutButton />
 
             <Fab
