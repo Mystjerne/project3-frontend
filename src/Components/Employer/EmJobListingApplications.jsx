@@ -36,8 +36,9 @@ export default function EmJobListingApplications() {
   const params = useParams();
   const jobListingId = params.jobListingId;
 
+  const [currentApplicantResume, setCurrentApplicantResume] = useState(0);
+
   const [allApplicantResumes, setAllApplicantResumes] = useState([]);
-  const [currentApplicantResume, setCurrentApplicantResumes] = useState([]);
   const [AllApplicantSkillSets, setAllApplicantSkillSets] = useState([]);
   const [AllApplicantWorkExp, setAllApplicantWorkExp] = useState([]);
   const [AllApplicantEducations, setAllApplicantEducations] = useState([]);
@@ -61,6 +62,9 @@ export default function EmJobListingApplications() {
       });
   }, []);
 
+  //When an application is accepted or denied, set the currentResume to +1.
+  //On initliasing, the currentResume is 0.
+
   const handleAcceptApplication = (applicationId, talentId) => {
     //make a backend route that changes the status of the application from pending to accept
     console.log("handleAcceptApplication called");
@@ -76,6 +80,8 @@ export default function EmJobListingApplications() {
         console.error("Error fetching data:", error);
       });
     alert("Application accepted!");
+    setCurrentApplicantResume(currentApplicantResume + 1);
+    console.log("currentApplicantResume:", currentApplicantResume);
   };
 
   const handleDenyApplication = (applicationId, talentId) => {
@@ -92,15 +98,11 @@ export default function EmJobListingApplications() {
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
+
     alert("Application denied!");
+    setCurrentApplicantResume(currentApplicantResume + 1);
+    console.log("currentApplicantResume:", currentApplicantResume);
   };
-
-  //it would be nice to get a single application at a time
-  //but i can only get talentids through getting all applications so idk
-
-  //get the ids of all the talents that have made an application in order. put that into a state.
-  //using the ids of all the talents, get the resumes of all talents and put that into a state
-  //do this for talent's skillset, benefits, work experiences and talent education
 
   useEffect(() => {
     const talentids = jobapplications.map(
@@ -230,6 +232,21 @@ export default function EmJobListingApplications() {
 
   //As of right now, it's hard coded to only display the first application to the job listing.
   //Potential improvements: have it change
+
+  const isDataAvailable =
+    allApplicantResumes.length > 0 &&
+    allApplicantResumes[0] &&
+    AllApplicantSkillSets.length > 0 &&
+    AllApplicantSkillSets[0] &&
+    AllApplicantWorkExp.length > 0 &&
+    AllApplicantWorkExp[0] &&
+    AllApplicantEducations.length > 0 &&
+    AllApplicantEducations[0] &&
+    AllApplicantBenefits.length > 0 &&
+    AllApplicantBenefits[0] &&
+    AllApplicantBenefits[0].benefits &&
+    AllApplicantBenefits[0].benefits.length > 0;
+
   return (
     <div className="container">
       <h3 className="box">Job Listing no. {jobListingId}</h3>
@@ -242,113 +259,112 @@ export default function EmJobListingApplications() {
         jobResponsibility={jobListing.jobResponsibility}
       />
       {/*Make this a talent id:*/}
-      <h3 className="box">Applicant no.1</h3>
-      {/*Display talent's resume here.*/}
-      <h5 className="box">They consider themselves to be a:</h5>
-      {allApplicantResumes?.[0]?.title}
-      <h5 className="box">Their objective:</h5>
-      {allApplicantResumes &&
-        allApplicantResumes[0] &&
-        allApplicantResumes[0][0].objective}
-      <h5 className="box">They are proficient in:</h5>
-      {AllApplicantSkillSets &&
-        AllApplicantSkillSets[0] &&
-        AllApplicantSkillSets[0][0].skill}{" "}
-      at an&nbsp;
-      {AllApplicantSkillSets &&
-        AllApplicantSkillSets[0] &&
-        AllApplicantSkillSets[0][0].proficiencyLevel}
-      &nbsp;level.
-      <h5 className="box">They have the following work experiences:</h5>
-      {AllApplicantWorkExp &&
-        AllApplicantWorkExp[0] &&
-        AllApplicantWorkExp[0][0].position}
-      , having worked there from&nbsp;
-      {AllApplicantWorkExp &&
-        AllApplicantWorkExp[0] &&
-        AllApplicantWorkExp[0][0].startMonth}
-      &nbsp;
-      {AllApplicantWorkExp &&
-        AllApplicantWorkExp[0] &&
-        AllApplicantWorkExp[0][0].startYear}
-      &nbsp;to&nbsp;
-      {AllApplicantWorkExp &&
-        AllApplicantWorkExp[0] &&
-        AllApplicantWorkExp[0][0].endMonth}
-      &nbsp;
-      {AllApplicantWorkExp &&
-        AllApplicantWorkExp[0] &&
-        AllApplicantWorkExp[0][0].endYear}
-      <h5 className="box">They studied at:</h5>
-      {AllApplicantEducations &&
-        AllApplicantEducations[0] &&
-        AllApplicantEducations[0][0].institution}
-      , obtaining a&nbsp;
-      {AllApplicantEducations &&
-        AllApplicantEducations[0] &&
-        AllApplicantEducations[0][0].degree}
-      .<h5 className="box">They prioritize the following:</h5>
-      {AllApplicantBenefits &&
-        AllApplicantBenefits[0]?.benefits[0]?.description}
-      <br></br>
-      {AllApplicantBenefits &&
-        AllApplicantBenefits[0]?.benefits[1]?.description}
-      <br></br>
-      {AllApplicantBenefits &&
-        AllApplicantBenefits[0]?.benefits[2]?.description}
-      <Fab
-        color="primary"
-        aria-label="add"
-        onClick={() =>
-          handleDenyApplication(
-            jobapplications[0].id,
-            jobapplications[0].talentId
-          )
-        }
-        sx={{
-          position: "fixed",
-          bottom: "80px", // Adjust as needed
-          left: "calc(50% - 55px)", // Center horizontally
-          transform: "translateX(-50%)", // Center horizontally
-          zIndex: "999", // Ensures it stays on top of other content
-          backgroundColor: "rgba(119, 101, 227,0.8)",
-          color: "white",
-          "&:hover": {
-            bgcolor: "rgb(138, 129, 124)",
-          },
-          "&:hover svg": {
-            color: "black",
-          },
-        }}
-      >
-        <ClearRoundedIcon />
-      </Fab>
-      <Fab
-        aria-label="like"
-        onClick={() =>
-          handleAcceptApplication(
-            jobapplications[0].id,
-            jobapplications[0].talentId
-          )
-        }
-        sx={{
-          position: "fixed",
-          bottom: "80px", // Adjust as needed
-          left: "calc(50% + 55px)", // Center horizontally
-          transform: "translateX(-50%)", // Center horizontally
-          zIndex: "999", // Ensures it stays on top of other content
-          backgroundColor: "rgba(119, 101, 227,0.8)",
-          color: "white",
-          "&:hover": {
-            bgcolor: "rgb(138, 129, 124)",
-          },
-          "&:hover svg": {
-            color: "black",
-          },
-        }}
-      >
-        <FavoriteIcon />
-      </Fab>
+      {isDataAvailable ? (
+        <>
+          <h3 className="box">Applicant no.1</h3>
+          {/*Display talent's resume here.*/}
+          <h5 className="box">They consider themselves to be a:</h5>
+          {allApplicantResumes[0][0].title}
+          <h5 className="box">Their objective:</h5>
+          {allApplicantResumes[0][0].objective}
+          <h5 className="box">They are proficient in:</h5>
+          {AllApplicantSkillSets[0][0].skill} at an&nbsp;
+          {AllApplicantSkillSets[0][0].proficiencyLevel}
+          &nbsp;level.
+          <h5 className="box">They have the following work experiences:</h5>
+          {AllApplicantWorkExp[0][0].position}, having worked there from&nbsp;
+          {AllApplicantWorkExp[0][0].startMonth}
+          &nbsp;
+          {AllApplicantWorkExp[0][0].startYear}
+          &nbsp;to&nbsp;
+          {AllApplicantWorkExp[0][0].endMonth}
+          &nbsp;
+          {AllApplicantWorkExp[0][0].endYear}
+          <h5 className="box">They studied at:</h5>
+          {AllApplicantEducations[0][0].institution}, obtaining a&nbsp;
+          {AllApplicantEducations[0][0].degree}.
+          <h5 className="box">They prioritize the following:</h5>
+          {AllApplicantBenefits &&
+            AllApplicantBenefits[0]?.benefits[0]?.category}
+          <br></br>
+          <p className="wp-duration">
+            {" "}
+            {AllApplicantBenefits &&
+              AllApplicantBenefits[0]?.benefits[0]?.description}
+          </p>
+          <hr />
+          {AllApplicantBenefits &&
+            AllApplicantBenefits[0]?.benefits[1]?.category}
+          <br></br>
+          <p className="wp-duration">
+            {AllApplicantBenefits &&
+              AllApplicantBenefits[0]?.benefits[1]?.description}
+          </p>
+          <hr />
+          {AllApplicantBenefits &&
+            AllApplicantBenefits[0]?.benefits[2]?.category}
+          <p className="wp-duration">
+            {AllApplicantBenefits &&
+              AllApplicantBenefits[0]?.benefits[2]?.description}
+          </p>
+          <hr />
+          <Fab
+            color="primary"
+            aria-label="add"
+            onClick={() =>
+              handleDenyApplication(
+                jobapplications[0].id,
+                jobapplications[0].talentId
+              )
+            }
+            sx={{
+              position: "fixed",
+              bottom: "80px", // Adjust as needed
+              left: "calc(50% - 55px)", // Center horizontally
+              transform: "translateX(-50%)", // Center horizontally
+              zIndex: "999", // Ensures it stays on top of other content
+              backgroundColor: "rgba(119, 101, 227,0.8)",
+              color: "white",
+              "&:hover": {
+                bgcolor: "rgb(138, 129, 124)",
+              },
+              "&:hover svg": {
+                color: "black",
+              },
+            }}
+          >
+            <ClearRoundedIcon />
+          </Fab>
+          <Fab
+            aria-label="like"
+            onClick={() =>
+              handleAcceptApplication(
+                jobapplications[0].id,
+                jobapplications[0].talentId
+              )
+            }
+            sx={{
+              position: "fixed",
+              bottom: "80px", // Adjust as needed
+              left: "calc(50% + 55px)", // Center horizontally
+              transform: "translateX(-50%)", // Center horizontally
+              zIndex: "999", // Ensures it stays on top of other content
+              backgroundColor: "rgba(119, 101, 227,0.8)",
+              color: "white",
+              "&:hover": {
+                bgcolor: "rgb(138, 129, 124)",
+              },
+              "&:hover svg": {
+                color: "black",
+              },
+            }}
+          >
+            <FavoriteIcon />
+          </Fab>
+        </>
+      ) : (
+        <p>There are currently no applicants to this job listing.</p>
+      )}
     </div>
   );
 }
