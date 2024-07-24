@@ -34,7 +34,7 @@ export default function EmDashboard() {
   }, [joblistings]);
 
   let alljoblistings = joblistings.map((joblisting) => (
-    <>
+    <div key={joblisting.id}>
       <OutlinedCard
         jobTitle={joblisting.jobTitle}
         applicationStartDate={joblisting.applicationStartDate}
@@ -43,7 +43,8 @@ export default function EmDashboard() {
         joblistingID={joblisting.id}
         employerID={userID}
       ></OutlinedCard>
-    </>
+      <br />
+    </div>
   ));
 
   return (
