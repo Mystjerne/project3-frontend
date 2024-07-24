@@ -294,13 +294,14 @@ const OutlinedCard2 = ({
           {applicationStartDate} - {applicationEndDate}
         </Typography>
 
-        <Typography variant="body2">Description : {description}</Typography>
+        <Typography variant="body">Description:</Typography>
+        <Typography variant="body2">{description}</Typography>
 
-        <Typography variant="body2">Skillset : {skillSet}</Typography>
+        <Typography variant="body">Skillset:</Typography>
+        <Typography variant="body2">{skillSet}</Typography>
 
-        <Typography variant="body2">
-          Job Responsibilities : {jobResponsibility}
-        </Typography>
+        <Typography variant="body">Job Responsibilities :</Typography>
+        <Typography variant="body2">{jobResponsibility}</Typography>
       </CardContent>
     </Fragment>
   );

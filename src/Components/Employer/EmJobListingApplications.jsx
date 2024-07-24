@@ -44,6 +44,8 @@ export default function EmJobListingApplications() {
   const [AllApplicantEducations, setAllApplicantEducations] = useState([]);
   const [AllApplicantBenefits, setAllApplicantBenefits] = useState([]);
 
+  const [total_num_applications, setTotalNumApplications] = useState(null);
+
   useEffect(() => {
     //get the specific job listing data.
     //also get all applications associated with that job listing.
@@ -53,14 +55,21 @@ export default function EmJobListingApplications() {
         const joblistingdata = response.data.jobListing;
         const joblistingappdata = response.data.applications;
 
-        console.log(response.data);
         setJobApplications(joblistingappdata);
         setJobListing(joblistingdata);
+        console.log("joblistingappdata: ", joblistingappdata);
+        console.log("joblistingdata:", joblistingdata);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
   }, []);
+
+  useEffect(() => {
+    console.log("allApplicantResumes:", allApplicantResumes);
+    setTotalNumApplications(allApplicantResumes.length);
+    console.log("total_num_applications:", total_num_applications);
+  }, [allApplicantResumes]);
 
   //When an application is accepted or denied, set the currentResume to +1.
   //On initliasing, the currentResume is 0.
@@ -74,7 +83,7 @@ export default function EmJobListingApplications() {
         applicationId: applicationId,
       })
       .then((response) => {
-        console.log(response.data);
+        //console.log(response.data);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
@@ -93,7 +102,7 @@ export default function EmJobListingApplications() {
         applicationId: applicationId,
       })
       .then((response) => {
-        console.log(response.data);
+        //console.log(response.data);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
@@ -108,7 +117,7 @@ export default function EmJobListingApplications() {
     const talentids = jobapplications.map(
       (jobapplication) => jobapplication.talentId
     );
-    console.log("talentids", talentids);
+    //console.log("talentids", talentids);
     getAllTalentResumes(talentids);
     getAllTalentSkillSets(talentids);
     getAllTalentWorkExp(talentids);
@@ -259,53 +268,76 @@ export default function EmJobListingApplications() {
         jobResponsibility={jobListing.jobResponsibility}
       />
       {/*Make this a talent id:*/}
-      {isDataAvailable ? (
+      {isDataAvailable && currentApplicantResume < total_num_applications ? (
         <>
-          <h3 className="box">Applicant no.1</h3>
+          <h3 className="box">Applicant no. {currentApplicantResume + 1}</h3>
           {/*Display talent's resume here.*/}
           <h5 className="box">They consider themselves to be a:</h5>
-          {allApplicantResumes[0][0].title}
+          {allApplicantResumes[currentApplicantResume][0].title}
           <h5 className="box">Their objective:</h5>
-          {allApplicantResumes[0][0].objective}
+          {allApplicantResumes[currentApplicantResume][0].objective}
           <h5 className="box">They are proficient in:</h5>
-          {AllApplicantSkillSets[0][0].skill} at an&nbsp;
-          {AllApplicantSkillSets[0][0].proficiencyLevel}
-          &nbsp;level.
+          {AllApplicantSkillSets[currentApplicantResume].map(
+            (skillSet, index) => (
+              <div key={index}>
+                <div>
+                  {skillSet.skill} at an {skillSet.proficiencyLevel} level.
+                </div>
+                <hr />
+              </div>
+            )
+          )}
           <h5 className="box">They have the following work experiences:</h5>
-          {AllApplicantWorkExp[0][0].position}, having worked there from&nbsp;
-          {AllApplicantWorkExp[0][0].startMonth}
-          &nbsp;
-          {AllApplicantWorkExp[0][0].startYear}
-          &nbsp;to&nbsp;
-          {AllApplicantWorkExp[0][0].endMonth}
-          &nbsp;
-          {AllApplicantWorkExp[0][0].endYear}
-          <h5 className="box">They studied at:</h5>
-          {AllApplicantEducations[0][0].institution}, obtaining a&nbsp;
-          {AllApplicantEducations[0][0].degree}.
+          {AllApplicantWorkExp[currentApplicantResume].map((workExp, index) => (
+            <div key={index}>
+              <div>
+                {workExp.position} from&nbsp;
+                {workExp.startMonth} {workExp.startYear} to&nbsp;
+                {workExp.endYear
+                  ? `${workExp.endMonth} ${workExp.endYear}`
+                  : "Present"}
+              </div>
+              <hr />
+            </div>
+          ))}
+          <h5 className="box">They have the following education:</h5>
+
+          {AllApplicantEducations[currentApplicantResume].map(
+            (education, index) => (
+              <div key={index}>
+                <div>
+                  {education.degree} at the {education.institution}
+                </div>
+                <hr />
+              </div>
+            )
+          )}
           <h5 className="box">They prioritize the following:</h5>
           {AllApplicantBenefits &&
-            AllApplicantBenefits[0]?.benefits[0]?.category}
-          <br></br>
+            AllApplicantBenefits[currentApplicantResume]?.benefits[0]?.category}
+          <br />
           <p className="wp-duration">
             {" "}
             {AllApplicantBenefits &&
-              AllApplicantBenefits[0]?.benefits[0]?.description}
+              AllApplicantBenefits[currentApplicantResume]?.benefits[0]
+                ?.description}
           </p>
           <hr />
           {AllApplicantBenefits &&
-            AllApplicantBenefits[0]?.benefits[1]?.category}
+            AllApplicantBenefits[currentApplicantResume]?.benefits[1]?.category}
           <br></br>
           <p className="wp-duration">
             {AllApplicantBenefits &&
-              AllApplicantBenefits[0]?.benefits[1]?.description}
+              AllApplicantBenefits[currentApplicantResume]?.benefits[1]
+                ?.description}
           </p>
           <hr />
           {AllApplicantBenefits &&
-            AllApplicantBenefits[0]?.benefits[2]?.category}
+            AllApplicantBenefits[currentApplicantResume]?.benefits[2]?.category}
           <p className="wp-duration">
             {AllApplicantBenefits &&
-              AllApplicantBenefits[0]?.benefits[2]?.description}
+              AllApplicantBenefits[currentApplicantResume]?.benefits[2]
+                ?.description}
           </p>
           <hr />
           <Fab
