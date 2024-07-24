@@ -109,20 +109,7 @@ export default function LandingPage() {
     //The checkUserStatus function is wrapped in a setTimeout with a 500ms delay.
     //This delay helps to ensure that isAuthenticated and user are set before the function executes.
     checkUserStatus();
-  }, [
-    isAuthenticated,
-    user,
-    nav,
-    setUserFirstName,
-    setUserLastName,
-    setUserImage,
-    setUserEmail,
-    setUserRole,
-    setUserID,
-    setDescription,
-    setCompanyName,
-    setMissionStatement,
-  ]);
+  });
 
   const LoginButton = () => {
     const { loginWithRedirect } = useAuth0();

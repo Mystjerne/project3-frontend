@@ -86,7 +86,11 @@ export default function UserCategory() {
         setEmail("");
         setPhotoURL("");
 
-        nav(`/${role}/profile`);
+        if (role === EMPLOYER) {
+          nav(`/${role}/input-details`);
+        } else {
+          nav(`/${role}/profile`);
+        }
 
         const userResponse = await axios.get(`${BACKEND_URL}/${role}`);
         const allUserData = userResponse.data;
