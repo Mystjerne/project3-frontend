@@ -221,7 +221,10 @@ export default function EmProfileCreation() {
         setPassedInState={setCompanyName}
         multiline={false}
       />
-      <h3>{companyName}</h3>
+      <h4 style={{ wordWrap: "break-word" }} className="contentbox">
+        {companyName}
+      </h4>
+
       {/* Code handling Company Description */}
       <h3 className="box">
         About The Company
@@ -229,6 +232,7 @@ export default function EmProfileCreation() {
           <EditIcon />
         </CustomButton>
       </h3>
+
       <BasicModal
         modaltitle="Company Description:"
         modaldescription="Tell prospective job applicants what your company is all about!"
@@ -244,6 +248,7 @@ export default function EmProfileCreation() {
       <p style={{ wordWrap: "break-word" }} className="contentbox">
         {description}
       </p>
+      <hr />
 
       {/* Code handling Company Phone */}
       <h3 className="box">
@@ -264,8 +269,11 @@ export default function EmProfileCreation() {
         setPassedInState={setPhone}
         multiline={false}
       />
-      <h3>{phone}</h3>
 
+      <p style={{ wordWrap: "break-word" }} className="contentbox">
+        {phone}
+      </p>
+      <hr />
       {/* Code handling Company Headquarters */}
       <h3 className="box">
         Company Headquarters
@@ -285,8 +293,10 @@ export default function EmProfileCreation() {
         setPassedInState={setHeadquarters}
         multiline={false}
       />
-      <h3>{headquarters}</h3>
-
+      <p style={{ wordWrap: "break-word" }} className="contentbox">
+        {headquarters}
+      </p>
+      <hr />
       {/* Code handling Company Mission Statement */}
       <h3 className="box">
         Company Mission Statement
@@ -312,7 +322,7 @@ export default function EmProfileCreation() {
       <p style={{ wordWrap: "break-word" }} className="contentbox">
         {missionStatement}
       </p>
-
+      <hr />
       {/* <CustomButton className="center" onClick={() => handleSubmitEmData()}>
         Submit
       </CustomButton> */}

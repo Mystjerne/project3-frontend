@@ -17,7 +17,7 @@ const TalProfileObj = () => {
   const { isAuthenticated } = useAuth0();
   const { userID } = useUser();
   const [objectiveField, setObjectiveField] = useState(
-    "ADD DETAILS INTO THE FIELDS"
+    "What do you want to achieve?"
   );
   const [objectiveModal, setObjectiveModal] = useState(false);
 
@@ -35,7 +35,7 @@ const TalProfileObj = () => {
 
           // Check if objective array is empty
           if (objective.length === 0) {
-            setObjectiveField("ADD DETAILS INTO THE FIELDS");
+            setObjectiveField("What do you want to achieve?");
           } else {
             setObjectiveField(objective);
           }
